@@ -1,2 +1,2 @@
 # CODING-PROJECT-1
-my new super duper cool game
+in the zip file, the readme there shows how to run the webpage
