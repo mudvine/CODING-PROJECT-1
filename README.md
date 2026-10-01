@@ -1,2 +1,353 @@
 # CODING-PROJECT-1
 in the zip file, the readme there shows how to run the webpage
+
+
+CODE BELOW
+----------------------
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Mr Osborne</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --panel-alt: #1f2937;
+        --text: #e5e7eb;
+        --muted: #cbd5e1;
+        --accent: #fbbf24;
+        --accent-2: #38bdf8;
+        --good: #34d399;
+        --shadow: rgba(15, 23, 42, 0.45);
+      }
+
+       { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #020617, #0f172a 45%, #111827);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .game {
+        width: min(760px, 100%);
+        background: rgba(17, 24, 39, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 22px;
+        box-shadow: 0 20px 45px var(--shadow);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--accent), #f59e0b);
+        color: #111827;
+        padding: 26px 28px 22px;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: 0.04em;
+      }
+
+      .header p {
+        margin: 10px 0 0;
+        font-weight: 700;
+      }
+
+      .content {
+        padding: 28px;
+      }
+
+      .status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        font-size: 0.96rem;
+        color: var(--muted);
+      }
+
+      .badge {
+        display: inline-block;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        color: #bae6fd;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-weight: 700;
+      }
+
+      .riddle-card {
+        background: linear-gradient(180deg, rgba(31, 41, 55, 0.9), rgba(15, 23, 42, 0.9));
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 18px;
+        padding: 22px 20px;
+      }
+
+      .prompt {
+        font-size: clamp(1.1rem, 2vw, 1.5rem);
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+
+      .answer-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 14px;
+      }
+
+      input[type="text"] {
+        flex: 1 1 240px;
+        min-width: 0;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text);
+        font-size: 1rem;
+      }
+
+      input[type="text"]:focus {
+        outline: 2px solid rgba(56, 189, 248, 0.7);
+        border-color: transparent;
+      }
+
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        background: var(--accent-2);
+        color: #082f49;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .feedback {
+        min-height: 30px;
+        margin-top: 16px;
+        font-weight: 700;
+      }
+
+      .feedback.success {
+        color: var(--good);
+      }
+
+      .feedback.error {
+        color: #fca5a5;
+      }
+
+      .map {
+        margin-top: 20px;
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        border-radius: 16px;
+        padding: 18px;
+      }
+
+      .map h2 {
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+      }
+
+      .clue-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .clue-list li {
+        background: rgba(31, 41, 55, 0.7);
+        border-radius: 10px;
+        padding: 10px 12px;
+        color: var(--muted);
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game">
+      <div class="header">
+        <h1>Find Mr Osborne</h1>
+        <p>Ten riddles. One missing teacher. One final clue.</p>
+      </div>
+
+      <div class="content">
+        <div class="status">
+          <span id="progressText">Riddle 1 of 10</span>
+          <span class="badge" id="statusBadge">Searching</span>
+        </div>
+
+        <div class="riddle-card">
+          <div id="riddlePrompt" class="prompt"></div>
+
+          <div class="answer-box">
+            <input id="answerInput" type="text" placeholder="Type your answer here" aria-label="Answer" />
+            <button id="submitBtn" type="button">Submit</button>
+          </div>
+
+          <div id="feedback" class="feedback" aria-live="polite"></div>
+        </div>
+
+        <div class="map">
+          <h2>Clues Found</h2>
+          <ul class="clue-list" id="clueList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const riddles = [
+        {
+          prompt: "I am where stories sleep in rows, where pages turn and silence glows. A teacher may be found among the shelves, and the class may hear a lesson whispered in the air. What am I?",
+          answer: "library",
+          hint: "The clue is the place with books."
+        },
+        {
+          prompt: "I hum with life before the bell and glow with bright white light. I am the room where experiments fizz and bubbles rise. Where is Mr Osborne likely hiding?",
+          answer: "chemistry",
+          hint: "This is where science happens."
+        },
+        {
+          prompt: "I am a place of chalk and clean whiteboards, full of learners who scribble and think. Mr Osborne may be standing here, ready to teach. What room am I?",
+          answer: "classroom",
+          hint: "A teacher is most at home here."
+        },
+        {
+          prompt: "I am a place where minds race, balls fly, and footsteps echo. Young athletes train here, and a teacher may watch from the sideline. What am I?",
+          answer: "gymnasium",
+          hint: "Think about PE and games."
+        },
+        {
+          prompt: "I am a row of tiny classrooms with no walls of stone, where the wind can reach the desks and the morning sun warms the benches. Mr Osborne may be teaching from here, where the school reaches beyond the main building. What am I?",
+          answer: "portables",
+          hint: "These are small outside classrooms, often separate from the main building."
+        },
+        {
+          prompt: "I am a place of metal, steam, and the smell of food. Here lunches are made and hungry students gather nearby. Where could he be?",
+          answer: "cafeteria",
+          hint: "This is where meals are served."
+        },
+        {
+          prompt: "I am the place where rain taps the windows and the sky is seen through glass. A teacher may look out here, thinking. What room is this?",
+          answer: "greenhouse",
+          hint: "This is a glasshouse full of plants."
+        },
+        {
+          prompt: "I am a grand room where voices rise and the whole school gathers to watch, listen, and celebrate. Lights shine, seats face forward, and performances begin. Where might Mr Osborne be?",
+          answer: "auditorium",
+          hint: "This is the large hall used for assemblies and performances."
+        },
+        {
+          prompt: "I am the place where the school keeps its tools, paint, and messy projects. Mr Osborne may be among the shelves of glue and paper. What is this workshop called?",
+          answer: "art",
+          hint: "Think creative making."
+        },
+        {
+          prompt: "I am the final clue: the teacher who brings code to life, guides students through logic, and fills the room with the hum of problem-solving. Mr Osborne is not hiding in a hallway or on the field—he is teaching in his coding room, where every lesson is built line by line. What is it?",
+          answer: "coding",
+          hint: "He teaches the skill of creating with code."
+        }
+      ];
+
+      const clueList = document.getElementById('clueList');
+      const riddlePrompt = document.getElementById('riddlePrompt');
+      const answerInput = document.getElementById('answerInput');
+      const submitBtn = document.getElementById('submitBtn');
+      const feedback = document.getElementById('feedback');
+      const progressText = document.getElementById('progressText');
+      const statusBadge = document.getElementById('statusBadge');
+
+      let currentIndex = 0;
+      const solved = [];
+
+      function renderRiddle() {
+        const riddle = riddles[currentIndex];
+        riddlePrompt.textContent = riddle.prompt;
+        progressText.textContent = `Riddle ${currentIndex + 1} of ${riddles.length}`;
+        answerInput.value = '';
+        answerInput.focus();
+        feedback.textContent = '';
+        feedback.className = 'feedback';
+        statusBadge.textContent = currentIndex === riddles.length - 1 ? 'Final clue' : 'Searching';
+      }
+
+      function addClue(text) {
+        const li = document.createElement('li');
+        li.textContent = text;
+        clueList.appendChild(li);
+      }
+
+      function handleAnswer() {
+        const guess = answerInput.value.trim().toLowerCase();
+
+        if (!guess) {
+          feedback.textContent = 'Please type an answer first.';
+          feedback.className = 'feedback error';
+          return;
+        }
+
+        const correctAnswer = riddles[currentIndex].answer;
+
+        if (guess === correctAnswer) {
+          solved.push(riddles[currentIndex].prompt);
+          addClue(`Solved: ${correctAnswer}`);
+          feedback.textContent = 'Correct! A clue is revealed.';
+          feedback.className = 'feedback success';
+
+          currentIndex += 1;
+
+          if (currentIndex < riddles.length) {
+            setTimeout(renderRiddle, 900);
+          } else {
+            setTimeout(() => {
+              riddlePrompt.textContent = 'You found Mr Osborne! He was in the coding room, teaching his students and guiding the next lesson one line of code at a time.';
+              progressText.textContent = 'Case solved';
+              statusBadge.textContent = 'Found';
+              answerInput.classList.add('hidden');
+              submitBtn.classList.add('hidden');
+              feedback.textContent = 'Mission complete!';
+              feedback.className = 'feedback success';
+            }, 900);
+          }
+        } else {
+          feedback.textContent = `Not quite. ${riddles[currentIndex].hint}`;
+          feedback.className = 'feedback error';
+        }
+      }
+
+      submitBtn.addEventListener('click', handleAnswer);
+      answerInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') handleAnswer();
+      });
+
+      renderRiddle();
+    </script>
+  </body>
+</html>
